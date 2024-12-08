@@ -16,12 +16,6 @@ name: Daily Build Test
 on:
   workflow_dispatch:
   repository_dispatch:
-  push:
-    paths:
-      - 'rootfs/**'
-      - 'Dockerfile'
-  schedule:
-    - cron: 10 16 * * *
 
 jobs:
   test:
