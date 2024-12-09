@@ -66,7 +66,7 @@ docker run -d \
 
 - Download [Compose file](https://github.com/antman666/Aria2-Pro-Docker/blob/master/docker-compose.yml)
 ```
-wget git.io/aria2-pro.yml
+wget https://raw.githubusercontent.com/antman666/Aria2-Pro-Docker/refs/heads/master/docker-compose.yml
 ```
 
 - Edit Compose file
