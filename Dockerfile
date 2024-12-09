@@ -18,7 +18,7 @@ COPY rootfs /
 COPY aria2-install.sh /root
 
 RUN apk add --no-cache jq findutils && \
-    bash /root/aria2-install.sh \
+    bash /root/aria2-install.sh && \
     rm -rf /var/cache/apk/* /tmp/* /root/aria2-install.sh
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=1 \
