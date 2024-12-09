@@ -13,7 +13,7 @@ A perfect Aria2 Docker image. Out of the box, just add download tasks and don't 
 
 ## Features
 
-* Supported platforms: `amd64`, `i386`, `arm64`, `armhf`
+* Supported platforms: `amd64 (x86_64-v3)`, `i386`, `arm64`, `armhf`
 * Full Function: `Async DNS`, `BitTorrent`, `Firefox3 Cookie`, `GZip`, `HTTPS`, `Message Digest`, `Metalink`, `XML-RPC`, `SFTP`
 * `max-connection-per-server` unlimited.
 * retry on slow speed (`lowest-speed-limit`) and connection close
