@@ -14,5 +14,5 @@
 
 umask ${UMASK_SET:-022}
 
-exec s6-setuidgid p3terx aria2c \
+exec s6-setuidgid aria2 aria2c \
     --conf-path=/config/aria2.conf
