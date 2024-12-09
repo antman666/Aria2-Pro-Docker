@@ -35,15 +35,15 @@ jobs:
     - name: Login to DockerHub
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
+        username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.CR_PAT }}
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
 
     - name: Marker version and time
       id: getVersion
@@ -56,12 +56,12 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
-        platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6
+        platforms: linux/amd64,linux/i386,linux/arm64,linux/armhf
         file: Dockerfile
         context: .
         push: true
         tags: |
-          p3terx/aria2-pro
-          ghcr.io/p3terx/aria2-pro
-          p3terx/aria2-pro:${{ steps.getVersion.outputs.time }}
-          ghcr.io/p3terx/aria2-pro:${{ steps.getVersion.outputs.time }}
+          antman666/aria2-pro
+          ghcr.io/antman666/aria2-pro
+          antman666/aria2-pro:${{ steps.getVersion.outputs.time }}
+          ghcr.io/antman666/aria2-pro:${{ steps.getVersion.outputs.time }}
