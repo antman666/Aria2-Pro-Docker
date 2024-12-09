@@ -11,10 +11,9 @@
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
 
-FROM p3terx/s6-alpine
+FROM antman666/s6-alpine
 
 COPY rootfs /
-
 COPY aria2-install.sh /root
 
 RUN apk add --no-cache jq findutils && \
