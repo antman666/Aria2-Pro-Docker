@@ -13,11 +13,13 @@
 
 FROM p3terx/s6-alpine
 
-RUN apk add --no-cache jq findutils && \
-    curl -fsSL https://raw.githubusercontent.com/antman666/Aria2-Pro-Docker/refs/heads/master/aria2-install.sh | bash && \
-    rm -rf /var/cache/apk/* /tmp/*
-
 COPY rootfs /
+
+COPY aria2-install.sh /root
+
+RUN apk add --no-cache jq findutils && \
+    bash /root/aria2-install.sh \
+    rm -rf /var/cache/apk/* /tmp/* /root/aria2-install.sh
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=1 \
     RCLONE_CONFIG=/config/rclone.conf \
