@@ -12,4 +12,4 @@
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
 
-s6-svscanctl -t /var/run/s6/services
+s6-svscanctl -t /var/run/service
