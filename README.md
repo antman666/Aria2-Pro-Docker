@@ -2,18 +2,18 @@
 
 # Aria2 Pro Docker
 
-[![LICENSE](https://img.shields.io/github/license/P3TERX/Aria2-Pro-Docker?style=flat-square&label=LICENSE)](https://github.com/P3TERX/Aria2-Pro-Docker/blob/master/LICENSE)
+[![LICENSE](https://img.shields.io/github/license/antman666/Aria2-Pro-Docker?style=flat-square&label=LICENSE)](https://github.com/antman666/Aria2-Pro-Docker/blob/master/LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/P3TERX/Aria2-Pro-Docker.svg?style=flat-square&label=Stars&logo=github)](https://github.com/P3TERX/Aria2-Pro-Docker/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/P3TERX/Aria2-Pro-Docker.svg?style=flat-square&label=Forks&logo=github)](https://github.com/P3TERX/Aria2-Pro-Docker/fork)
-[![Docker Stars](https://img.shields.io/docker/stars/p3terx/aria2-pro.svg?style=flat-square&label=Stars&logo=docker)](https://hub.docker.com/r/p3terx/aria2-pro)
-[![Docker Pulls](https://img.shields.io/docker/pulls/p3terx/aria2-pro.svg?style=flat-square&label=Pulls&logo=docker&color=orange)](https://hub.docker.com/r/p3terx/aria2-pro)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/P3TERX/Aria2-Pro-Docker/docker-build-test.yml?label=Actions&logo=github&style=flat-square)
+[![GitHub forks](https://img.shields.io/github/forks/antman666/Aria2-Pro-Docker.svg?style=flat-square&label=Forks&logo=github)](https://github.com/antman666/Aria2-Pro-Docker/fork)
+[![Docker Stars](https://img.shields.io/docker/stars/antman666/aria2-pro.svg?style=flat-square&label=Stars&logo=docker)](https://hub.docker.com/r/antman666/aria2-pro)
+[![Docker Pulls](https://img.shields.io/docker/pulls/antman666/aria2-pro.svg?style=flat-square&label=Pulls&logo=docker&color=orange)](https://hub.docker.com/r/antman666/aria2-pro)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/antman666/Aria2-Pro-Docker/docker-build-test.yml?label=Actions&logo=github&style=flat-square)
 
 A perfect Aria2 Docker image. Out of the box, just add download tasks and don't need to think about anything else.
 
 ## Features
 
-* Supported platforms: `amd64`, `i386`, `arm64`, `arm/v7`, `arm/v6`
+* Supported platforms: `amd64`, `i386`, `arm64`, `arm/v7`
 * Full Function: `Async DNS`, `BitTorrent`, `Firefox3 Cookie`, `GZip`, `HTTPS`, `Message Digest`, `Metalink`, `XML-RPC`, `SFTP`
 * `max-connection-per-server` unlimited.
 * retry on slow speed (`lowest-speed-limit`) and connection close
@@ -47,7 +47,7 @@ docker run -d \
     -p 6888:6888/udp \
     -v $PWD/aria2-config:/config \
     -v $PWD/aria2-downloads:/downloads \
-    p3terx/aria2-pro
+    antman666/aria2-pro
 ```
 
 - Then you need a WebUI for control, such as [AriaNg](https://github.com/mayswind/AriaNg). [This link](http://ariang.mayswind.net/latest) is provided by the developer and can be used directly. Or use Docker to deploy it yourself:
@@ -64,7 +64,7 @@ docker run -d \
 
 ### Docker Compose
 
-- Download [Compose file](https://github.com/P3TERX/Aria2-Pro-Docker/blob/master/docker-compose.yml)
+- Download [Compose file](https://github.com/antman666/Aria2-Pro-Docker/blob/master/docker-compose.yml)
 ```
 wget git.io/aria2-pro.yml
 ```
@@ -112,10 +112,10 @@ I am working hard on my English, so this part may be explained in detail later. 
 
 * [aria2](https://github.com/aria2/aria2)
 * [P3TERX/aria2.conf](https://github.com/P3TERX/aria2.conf)
-* [P3TERX/Aria2-Pro-Core](https://github.com/P3TERX/Aria2-Pro-Core)
+* [antman666/Aria2-Pro-Core](https://github.com/antman666/Aria2-Pro-Core)
 * [just-containers/s6-overlay](https://github.com/just-containers/s6-overlay)
 * [XIU2/TrackersListCollection](https://github.com/XIU2/TrackersListCollection)
 
 ## License
 
-[MIT](https://github.com/P3TERX/Aria2-Pro-Docker/blob/master/LICENSE) © P3TERX
+[MIT](https://github.com/antman666/Aria2-Pro-Docker/blob/master/LICENSE) © antman666
