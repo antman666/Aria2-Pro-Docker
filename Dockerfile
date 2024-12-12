@@ -14,6 +14,7 @@
 FROM antman666/s6-alpine
 
 COPY rootfs /
+COPY aria_tracker.sh /etc/periodic/daily
 COPY aria2-install.sh /root
 
 RUN apk add --no-cache jq findutils && \
