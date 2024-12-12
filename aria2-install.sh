@@ -56,7 +56,7 @@ case ${OS_ARCH} in
     FILE_KEYWORD='i386'
     ;;
 x86_64 | amd64)
-    FILE_KEYWORD='amd64'
+    FILE_KEYWORD='x86_64'
     ;;
 aarch64 | arm64)
     FILE_KEYWORD='arm64'
