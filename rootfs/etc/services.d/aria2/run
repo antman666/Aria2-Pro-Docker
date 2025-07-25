@@ -1,4 +1,4 @@
-#!/usr/bin/execline -P
+#!/usr/bin/execlineb
 #     _         _       ____    ____
 #    / \   _ __(_) __ _|___ \  |  _ \ _ __ ___
 #   / _ \ | '__| |/ _` | __) | | |_) | '__/ _ \
@@ -14,5 +14,4 @@
 
 # umask ${UMASK_SET:-022}
 
-s6-setuidgid root aria2c \
-    --conf-path=/config/aria2.conf
+s6-setuidgid root aria2c --conf-path=/config/aria2.conf
