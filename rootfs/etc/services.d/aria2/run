@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bash
+#!/usr/bin/execline -P
 #     _         _       ____    ____
 #    / \   _ __(_) __ _|___ \  |  _ \ _ __ ___
 #   / _ \ | '__| |/ _` | __) | | |_) | '__/ _ \
@@ -14,5 +14,5 @@
 
 # umask ${UMASK_SET:-022}
 
-exec s6-setuidgid root aria2c \
+s6-setuidgid root aria2c \
     --conf-path=/config/aria2.conf

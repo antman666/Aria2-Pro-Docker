@@ -30,7 +30,7 @@ PROFILE_URL2="https://aria2c.now.sh"
 PROFILE_URL3="https://cdn.jsdelivr.net/gh/P3TERX/aria2.conf"
 
 FILE_ALLOCATION_SET() {
-    TMP_FILE="/downloads/P3TERX.COM"
+    TMP_FILE="/downloads/testfile"
     if fallocate -l 5G ${TMP_FILE}; then
         FILE_ALLOCATION=falloc
     else
