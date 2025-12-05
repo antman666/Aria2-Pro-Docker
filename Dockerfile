@@ -17,7 +17,7 @@ COPY rootfs /
 COPY aria_tracker /etc/periodic/daily
 COPY aria2-install.sh /root
 
-RUN apk add --no-cache bash jq findutils && \
+RUN apk add --no-cache bash jq findutils curl && \
     chmod a+x /etc/periodic/daily/aria_tracker && \
     bash /root/aria2-install.sh && \
     rm -rf /var/cache/apk/* /tmp/* /root/aria2-install.sh
