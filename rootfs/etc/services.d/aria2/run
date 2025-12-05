@@ -12,4 +12,4 @@
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
 
-s6-exec -c root aria2c --conf-path=/config/aria2.conf
+s6-setuidgid root aria2c --conf-path=/config/aria2.conf
