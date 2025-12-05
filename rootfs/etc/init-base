@@ -11,53 +11,69 @@
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
 
-Green_font_prefix="\033[32m"
-Red_font_prefix="\033[31m"
-Green_background_prefix="\033[42;37m"
-Red_background_prefix="\033[41;37m"
-Font_color_suffix="\033[0m"
-INFO="[${Green_font_prefix}INFO${Font_color_suffix}]"
-ERROR="[${Red_font_prefix}ERROR${Font_color_suffix}]"
-WARN="[${Yellow_font_prefix}WARN${Font_color_suffix}]"
+readonly Green_font_prefix="\e[32m"
+readonly Red_font_prefix="\e[31m"
+readonly Yellow_font_prefix="\e[33m"
+readonly Green_background_prefix="\e[42;37m"
+readonly Red_background_prefix="\e[41;37m"
+readonly Font_color_suffix="\e[0m"
+readonly INFO="[${Green_font_prefix}INFO${Font_color_suffix}]"
+readonly ERROR="[${Red_font_prefix}ERROR${Font_color_suffix}]"
+readonly WARN="[${Yellow_font_prefix}WARN${Font_color_suffix}]"
+readonly CURL_OPTIONS="-fsSL --connect-timeout 3 --max-time 3"
+
 DOWNLOAD_DIR="/downloads"
 ARIA2_CONF_DIR="/config"
 ARIA2_CONF="${ARIA2_CONF_DIR}/aria2.conf"
 SCRIPT_CONF="${ARIA2_CONF_DIR}/script.conf"
 SCRIPT_DIR="${ARIA2_CONF_DIR}/script"
-CURL_OPTIONS="-fsSL --connect-timeout 3 --max-time 3"
-PROFILE_URL1="https://p3terx.github.io/aria2.conf"
-PROFILE_URL2="https://aria2c.now.sh"
-PROFILE_URL3="https://cdn.jsdelivr.net/gh/P3TERX/aria2.conf"
+PROFILE_URLS=(
+    "https://p3terx.github.io/aria2.conf"
+    "https://aria2c.now.sh"
+    "https://cdn.jsdelivr.net/gh/P3TERX/aria2.conf"
+)
 
 FILE_ALLOCATION_SET() {
-    TMP_FILE="/downloads/testfile"
-    if fallocate -l 5G ${TMP_FILE}; then
-        FILE_ALLOCATION=falloc
+    local tmp_file="${DOWNLOAD_DIR}/testfile"
+    local file_allocation
+    
+    if fallocate -l 5G "${tmp_file}" 2>/dev/null; then
+        file_allocation="falloc"
     else
-        FILE_ALLOCATION=none
+        file_allocation="none"
     fi
-    rm -f ${TMP_FILE}
-    sed -i "s@^\(file-allocation=\).*@\1${FILE_ALLOCATION}@" "${ARIA2_CONF}"
+    
+    rm -f "${tmp_file}"
+    
+    sed -i "s@^\(file-allocation=\).*@\1${file_allocation}@" "${ARIA2_CONF}"
 }
 
 CONVERSION_ARIA2_CONF() {
-    sed -i "s@^\(rpc-listen-port=\).*@\1${RPC_PORT:-6800}@" "${ARIA2_CONF}"
-    sed -i "s@^\(listen-port=\).*@\1${LISTEN_PORT:-6888}@" "${ARIA2_CONF}"
-    sed -i "s@^\(dht-listen-port=\).*@\1${LISTEN_PORT:-6888}@" "${ARIA2_CONF}"
-    sed -i "s@^\(dir=\).*@\1/downloads@" "${ARIA2_CONF}"
-    sed -i "s@/root/.aria2@${ARIA2_CONF_DIR}@" "${ARIA2_CONF}"
-    sed -i "s@^#\(retry-on-.*=\).*@\1true@" "${ARIA2_CONF}"
-    sed -i "s@^\(max-connection-per-server=\).*@\132@" "${ARIA2_CONF}"
-    sed -i "s@^\(on-download-stop=\).*@\1${SCRIPT_DIR}/delete.sh@" ${ARIA2_CONF}
-    sed -i "s@^\(on-download-complete=\).*@\1${SCRIPT_DIR}/clean.sh@" "${ARIA2_CONF}"
-    [[ $TZ != "Asia/Shanghai" ]] && sed -i '11,$s/#.*//;/^$/d' "${ARIA2_CONF}"
+    sed -i \
+        -e "s@^\(rpc-listen-port=\).*@\1${RPC_PORT}@" \
+        -e "s@^\(listen-port=\).*@\1${LISTEN_PORT}@" \
+        -e "s@^\(dht-listen-port=\).*@\1${LISTEN_PORT}@" \
+        -e "s@^\(dir=\).*@\1/downloads@" \
+        -e "s@/root/.aria2@${ARIA2_CONF_DIR}@g" \
+        -e "s@^#\(retry-on-.*=\).*@\1true@" \
+        -e "s@^\(max-connection-per-server=\).*@\132@" \
+        -e "s@^\(on-download-stop=\).*@\1${SCRIPT_DIR}/delete.sh@" \
+        -e "s@^\(on-download-complete=\).*@\1${SCRIPT_DIR}/clean.sh@" \
+        "${ARIA2_CONF}"
+        
+    if [[ "${TZ}" != "Asia/Shanghai" ]]; then
+        sed -i '11,$s/#.*//;/^$/d' "${ARIA2_CONF}"
+    fi
+    
     FILE_ALLOCATION_SET
 }
 
 CONVERSION_SCRIPT_CONF() {
-    sed -i "s@\(upload-log=\).*@\1${ARIA2_CONF_DIR}/upload.log@" "${SCRIPT_CONF}"
-    sed -i "s@\(move-log=\).*@\1${ARIA2_CONF_DIR}/move.log@" "${SCRIPT_CONF}"
-    sed -i "s@^\(dest-dir=\).*@\1${DOWNLOAD_DIR}/completed@" "${SCRIPT_CONF}"
+    sed -i \
+        -e "s@\(upload-log=\).*@\1${ARIA2_CONF_DIR}/upload.log@" \
+        -e "s@\(move-log=\).*@\1${ARIA2_CONF_DIR}/move.log@" \
+        -e "s@^\(dest-dir=\).*@\1${DOWNLOAD_DIR}/completed@" \
+        "${SCRIPT_CONF}"
 }
 
 CONVERSION_CORE() {
@@ -65,26 +81,48 @@ CONVERSION_CORE() {
 }
 
 DOWNLOAD_PROFILE() {
-    for PROFILE in ${PROFILES}; do
-        [[ ${PROFILE} = *.sh || ${PROFILE} = core ]] && cd "${SCRIPT_DIR}" || cd "${ARIA2_CONF_DIR}"
-        while [[ ! -f ${PROFILE} ]]; do
-            rm -rf ${PROFILE}
-            echo
-            echo -e "${INFO} Downloading '${PROFILE}' ..."
-            curl -O ${CURL_OPTIONS} ${PROFILE_URL1}/${PROFILE} ||
-                curl -O ${CURL_OPTIONS} ${PROFILE_URL2}/${PROFILE} ||
-                curl -O ${CURL_OPTIONS} ${PROFILE_URL3}/${PROFILE}
-            [[ -s ${PROFILE} ]] && {
-                [[ "${PROFILE}" = "aria2.conf" ]] && CONVERSION_ARIA2_CONF
-                [[ "${PROFILE}" = "script.conf" ]] && CONVERSION_SCRIPT_CONF
-                [[ "${PROFILE}" = "core" ]] && CONVERSION_CORE
-                echo
-                echo -e "${INFO} '${PROFILE}' download completed !"
-            } || {
-                echo
-                echo -e "${ERROR} '${PROFILE}' download error, retry ..."
+    local profile
+    
+    for profile in ${PROFILES}; do
+        if [[ "${profile}" == *.sh || "${profile}" == "core" ]]; then
+            cd "${SCRIPT_DIR}"
+        else
+            cd "${ARIA2_CONF_DIR}"
+        fi
+        
+        if [[ -f "${profile}" ]]; then
+            continue
+        fi
+        
+        while [[ ! -f "${profile}" ]]; do
+            rm -f "${profile}"
+            
+            printf '\n%b %s %s ...\n' "${INFO}" "Downloading" "'${profile}'"
+            
+            local url
+            for url in "${PROFILE_URLS[@]}"; do
+                if curl -O ${CURL_OPTIONS} "${url}/${profile}"; then
+                    break
+                fi
+            done
+            
+            if [[ -s "${profile}" ]]; then
+                case "${profile}" in
+                    aria2.conf)
+                        CONVERSION_ARIA2_CONF
+                        ;;
+                    script.conf)
+                        CONVERSION_SCRIPT_CONF
+                        ;;
+                    core)
+                        CONVERSION_CORE
+                        ;;
+                esac
+                printf '\n%b %s %s !\n' "${INFO}" "Download completed" "'${profile}'"
+            else
+                printf '\n%b %s %s\n' "${ERROR}" "Download error" "'${profile}'"
                 sleep 3
-            }
+            fi
         done
     done
 }

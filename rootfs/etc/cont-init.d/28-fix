@@ -14,48 +14,57 @@
 
 . /etc/init-base
 
-[[ -e ${ARIA2_CONF_DIR}/delete.sh ]] && {
-    rm -f ${ARIA2_CONF_DIR}/*.sh
-    sed -i "s@^\(on-download-stop=\).*@\1${SCRIPT_DIR}/delete.sh@" ${ARIA2_CONF}
-    sed -i "s@^\(on-download-complete=\).*@\1${SCRIPT_DIR}/clean.sh@" ${ARIA2_CONF}
-}
+if [[ -e "${ARIA2_CONF_DIR}/delete.sh" ]]; then
+    rm -f "${ARIA2_CONF_DIR}"/*.sh
+    sed -i "s@^\(on-download-stop=\).*@\1${SCRIPT_DIR}/delete.sh@" "${ARIA2_CONF}"
+    sed -i "s@^\(on-download-complete=\).*@\1${SCRIPT_DIR}/clean.sh@" "${ARIA2_CONF}"
+fi
 
-sed -i "s@^\(dir=\).*@\1/downloads@" ${ARIA2_CONF}
-sed -i "s@^\(input-file=\).*@\1${ARIA2_CONF_DIR}/aria2.session@" ${ARIA2_CONF}
-sed -i "s@^\(save-session=\).*@\1${ARIA2_CONF_DIR}/aria2.session@" ${ARIA2_CONF}
-sed -i "s@^\(dht-file-path=\).*@\1${ARIA2_CONF_DIR}/dht.dat@" ${ARIA2_CONF}
-sed -i "s@^\(dht-file-path6=\).*@\1${ARIA2_CONF_DIR}/dht6.dat@" ${ARIA2_CONF}
+sed -i "s@^\(dir=\).*@\1/downloads@" "${ARIA2_CONF}"
+sed -i "s@^\(input-file=\).*@\1${ARIA2_CONF_DIR}/aria2.session@" "${ARIA2_CONF}"
+sed -i "s@^\(save-session=\).*@\1${ARIA2_CONF_DIR}/aria2.session@" "${ARIA2_CONF}"
+sed -i "s@^\(dht-file-path=\).*@\1${ARIA2_CONF_DIR}/dht.dat@" "${ARIA2_CONF}"
+sed -i "s@^\(dht-file-path6=\).*@\1${ARIA2_CONF_DIR}/dht6.dat@" "${ARIA2_CONF}"
 
-[[ -e ${ARIA2_CONF_DIR}/HelloWorld ]] && exit 0
+if [[ -e "${ARIA2_CONF_DIR}/HelloWorld" ]]; then
+    exit 0
+fi
 
-[[ ${RPC_PORT} ]] &&
-    sed -i "s@^\(rpc-listen-port=\).*@\1${RPC_PORT}@" ${ARIA2_CONF}
+if [[ -n "${RPC_PORT}" ]]; then
+    sed -i "s@^\(rpc-listen-port=\).*@\1${RPC_PORT}@" "${ARIA2_CONF}"
+fi
 
-[[ ${LISTEN_PORT} ]] && {
-    sed -i "s@^\(listen-port=\).*@\1${LISTEN_PORT}@" ${ARIA2_CONF}
-    sed -i "s@^\(dht-listen-port=\).*@\1${LISTEN_PORT}@" ${ARIA2_CONF}
-}
+if [[ -n "${LISTEN_PORT}" ]]; then
+    sed -i "s@^\(listen-port=\).*@\1${LISTEN_PORT}@" "${ARIA2_CONF}"
+    sed -i "s@^\(dht-listen-port=\).*@\1${LISTEN_PORT}@" "${ARIA2_CONF}"
+fi
 
-[[ ${RPC_SECRET} ]] &&
-    sed -i "s@^\(rpc-secret=\).*@\1${RPC_SECRET}@" ${ARIA2_CONF}
+if [[ -n "${RPC_SECRET}" ]]; then
+    sed -i "s@^\(rpc-secret=\).*@\1${RPC_SECRET}@" "${ARIA2_CONF}"
+fi
 
-[[ ${DISK_CACHE} ]] &&
-    sed -i "s@^\(disk-cache=\).*@\1${DISK_CACHE}@" ${ARIA2_CONF}
+if [[ -n "${DISK_CACHE}" ]]; then
+    sed -i "s@^\(disk-cache=\).*@\1${DISK_CACHE}@" "${ARIA2_CONF}"
+fi
 
-[[ "${IPV6_MODE}" = "true" || "${IPV6_MODE}" = "enable" ]] && {
-    sed -i "s@^\(disable-ipv6=\).*@\1false@" ${ARIA2_CONF}
-    sed -i "s@^\(enable-dht6=\).*@\1true@" ${ARIA2_CONF}
-}
+case "${IPV6_MODE}" in
+    true|enable)
+        sed -i "s@^\(disable-ipv6=\).*@\1false@" "${ARIA2_CONF}"
+        sed -i "s@^\(enable-dht6=\).*@\1true@" "${ARIA2_CONF}"
+        ;;
+    false|disable)
+        sed -i "s@^\(disable-ipv6=\).*@\1true@" "${ARIA2_CONF}"
+        sed -i "s@^\(enable-dht6=\).*@\1false@" "${ARIA2_CONF}"
+        ;;
+esac
 
-[[ "${IPV6_MODE}" = "false" || "${IPV6_MODE}" = "disable" ]] && {
-    sed -i "s@^\(disable-ipv6=\).*@\1true@" ${ARIA2_CONF}
-    sed -i "s@^\(enable-dht6=\).*@\1false@" ${ARIA2_CONF}
-}
-
-[[ "${SPECIAL_MODE}" = "rclone" ]] &&
-    sed -i "s@^\(on-download-complete=\).*@\1${SCRIPT_DIR}/upload.sh@" ${ARIA2_CONF}
-
-[[ "${SPECIAL_MODE}" = "move" ]] &&
-    sed -i "s@^\(on-download-complete=\).*@\1${SCRIPT_DIR}/move.sh@" ${ARIA2_CONF}
+case "${SPECIAL_MODE}" in
+    rclone)
+        sed -i "s@^\(on-download-complete=\).*@\1${SCRIPT_DIR}/upload.sh@" "${ARIA2_CONF}"
+        ;;
+    move)
+        sed -i "s@^\(on-download-complete=\).*@\1${SCRIPT_DIR}/move.sh@" "${ARIA2_CONF}"
+        ;;
+esac
 
 exit 0

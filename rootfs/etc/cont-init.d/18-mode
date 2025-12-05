@@ -23,14 +23,18 @@ INSTALL_RCLONE() {
     fi
 }
 
-if [[ "${SPECIAL_MODE}" = "rclone" ]]; then
-    INSTALL_RCLONE
-    PROFILES="upload.sh rclone.env"
-elif [[ "${SPECIAL_MODE}" = "move" ]]; then
-    PROFILES="move.sh"
-else
-    PROFILES="clean.sh"
-fi
+case "${SPECIAL_MODE}" in
+    rclone)
+        INSTALL_RCLONE
+        PROFILES="upload.sh rclone.env"
+        ;;
+    move)
+        PROFILES="move.sh"
+        ;;
+    *)
+        PROFILES="clean.sh"
+        ;;
+esac
 
 DOWNLOAD_PROFILE
 

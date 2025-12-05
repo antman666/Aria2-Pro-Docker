@@ -14,7 +14,7 @@
 
 . /etc/init-base
 
-mkdir -p ${ARIA2_CONF_DIR} ${SCRIPT_DIR} ${DOWNLOAD_DIR}
+mkdir -p "${ARIA2_CONF_DIR}" "${SCRIPT_DIR}" "${DOWNLOAD_DIR}"
 
 PROFILES="
 aria2.conf
@@ -28,16 +28,16 @@ LICENSE
 
 DOWNLOAD_PROFILE
 
-[[ ! -f "${ARIA2_CONF_DIR}/aria2.session" ]] && {
-    rm -rf "${ARIA2_CONF_DIR}/aria2.session"
+if [[ ! -f "${ARIA2_CONF_DIR}/aria2.session" ]]; then
+    rm -f "${ARIA2_CONF_DIR}/aria2.session"
     touch "${ARIA2_CONF_DIR}/aria2.session"
-}
+fi
 
 if ! [[ "${UPDATE_TRACKERS}" = "false" || "${UPDATE_TRACKERS}" = "disable" ]]; then
     rm -f /etc/services.d/crond/down
     PROFILES="tracker.sh"
     DOWNLOAD_PROFILE
-    bash ${SCRIPT_DIR}/tracker.sh ${ARIA2_CONF}
+    bash "${SCRIPT_DIR}/tracker.sh" "${ARIA2_CONF}"
 else
     touch /etc/services.d/crond/down
 fi
