@@ -12,5 +12,5 @@
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
 
-s6-envuidgid aria2c
+s6-envuidgid root
 s6-exec -c root aria2c --conf-path=/config/aria2.conf
